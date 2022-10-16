@@ -24,6 +24,6 @@ public class ParamEmpty {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(resposta);
         }
 
-        return ResponseEntity.status(200).body(resposta);
+        return ResponseEntity.status(resposta.getCode()).body(resposta);
     }
 }

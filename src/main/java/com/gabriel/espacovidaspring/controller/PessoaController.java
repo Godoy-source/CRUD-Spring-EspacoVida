@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -48,11 +49,15 @@ public class PessoaController {
 
     @PostMapping(path = "filtrar")
     public ResponseEntity<Resposta> findPessoaByCpf(@RequestBody Pessoa pessoa) {
+        if (pessoa.getCpf() == null) {
+            Resposta resposta = new Resposta(400, "Error, params required null", "Camp cpf can not a be null", null);
+            return ResponseEntity.status(resposta.getCode()).body(resposta);
+        }
         return pessoaService.findByCPF(pessoa.getCpf());
     }
 
     @DeleteMapping(path = {"/{data}"})
-    public ResponseEntity<Resposta> deletePessoa(@PathVariable(required=true, name="data") String data) {
+    public ResponseEntity<Resposta> deletePessoa(@PathVariable(required = true, name = "data") String data) {
         return pessoaService.delete(data);
     }
 
