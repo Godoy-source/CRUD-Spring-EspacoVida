@@ -1,6 +1,7 @@
 package com.gabriel.espacovidaspring.utils;
 
 import com.gabriel.espacovidaspring.model.Resposta;
+import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -11,6 +12,8 @@ public class ParamEmpty {
         var resposta = new Resposta(200, null, null, any);
         var objectString = any.toString();
 
+
+        //if(ObjectUtils.isEmpty())
         for (int i = 0; i < canBeANull.size(); i++) {
             if (objectString.contains(canBeANull.get(i) + "=null")) {
                 objectString = objectString.replace(canBeANull.get(i) + "=null", canBeANull.get(i) + "=Undefined");
@@ -20,10 +23,12 @@ public class ParamEmpty {
 
         if (objectString.contains("null")) {
             resposta.setCode(400);
-            resposta.setMessage("All camps is required, some one camp has empty");
+            resposta.setMessage("All camps is required, some one camp is empty");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(resposta);
         }
 
         return ResponseEntity.status(resposta.getCode()).body(resposta);
     }
+
+
 }

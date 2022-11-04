@@ -4,6 +4,7 @@ import com.gabriel.espacovidaspring.model.Pessoa;
 import com.gabriel.espacovidaspring.model.Resposta;
 import com.gabriel.espacovidaspring.repository.PessoaRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -12,7 +13,7 @@ import java.util.List;
 @Service
 @AllArgsConstructor
 public class PessoaService {
-
+    @Autowired
     final PessoaRepository pessoaRepository;
 
     public List<Pessoa> findAll() {
@@ -45,7 +46,6 @@ public class PessoaService {
     }
 
     public ResponseEntity<Resposta> save(Pessoa pessoa) {
-        var resposta = new Resposta(201, "New pessoa created with successful", null, pessoa);
         var procura = findByCPF(pessoa.getCpf()).getBody();
         try {
 
@@ -59,14 +59,18 @@ public class PessoaService {
             }
 
             pessoaRepository.save(pessoa);
-            return ResponseEntity.status(resposta.getCode()).body(resposta);
+            return ResponseEntity.status(201).body(Resposta.builder()
+                            .code(201)
+                            .message("New pessoa created with successful")
+                            .object(pessoa)
+                    .build());
 
 
         } catch (Exception err) {
-            resposta.setCode(400);
-            resposta.setMessage("Error in registering new pessoa");
-
-            return ResponseEntity.status(resposta.getCode()).body(resposta);
+            return ResponseEntity.status(400).body(Resposta.builder()
+                            .code(400)
+                            .message("Error in registering new pessoa")
+                    .build());
         }
     }
 
